@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.zhidao.myapplication.view.UpdateProgressBar
+
+        android:layout_gravity="center_horizontal"
+        android:padding="20dp"
+        android:clickable="true"
+        android:focusable="false"
+        android:id="@+id/loading"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        app:cover_bg_start_color="#1ad8d8d8"
+        app:cover_end_color="#3932D0"
+        app:cover_start_color="#3932D0"
+        app:cover_mid_color="#3FC4D4"
+        app:progress_width="9dp"/>
+
+    <Button
+
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/wave_progress_download"
+        android:text="水波纹下载完成"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </Button>
+    <com.zhidao.myapplication.view.WaveProgress
+        android:padding="15dp"
+        android:id="@+id/wave_progress_bar"
+        android:layout_width="228dp"
+        android:layout_height="228dp"
+        android:layout_gravity="center_horizontal"
+        app:darkWaveAnimTime="2300"
+        app:darkWaveColor="#770000FF"
+        app:lightWaveAnimTime="1800"
+        app:lightWaveColor="#77C065FF"
+        app:lightWaveDirect="R2L"
+        app:lockWave="false"
+        app:valueSize="45.5dp"
+        app:waveHeight="25dp"
+        app:value="0"
+        app:valueColor="#FFFFFF"
+        app:des_valueSize="17.5sp"
+        app:des_valueColor="#FFFFFF"
+        app:waveNum="1"
+        app:circleWidth="0.5dp"
+        app:bgCircleColor="#384B64"
+        />
+
+</LinearLayout>

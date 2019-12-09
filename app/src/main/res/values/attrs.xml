@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="iot_custom_view">
+        <attr name="iot_ringColor" format="reference|color" />
+        <attr name="iot_progressColor" format="reference|color" />
+        <attr name="iot_progressSize" format="integer" />
+        <attr name="iot_diameter" format="integer" />
+        <attr name="iot_integerSize" format="integer" />
+    </declare-styleable>
+
+    <attr name="icvp_min_page_scale_offset" format="dimension"/>
+    <attr name="icvp_center_page_scale_offset" format="dimension"/>
+    <attr name="icvp_min_page_scale" format="float"/>
+    <attr name="icvp_max_page_scale" format="float"/>
+    <attr name="icvp_medium_scaled" format="boolean"/>
+    <attr name="icvp_scroll_duration" format="integer"/>
+    <attr name="icvp_interpolator" format="reference"/>
+
+    <declare-styleable name="HorizontalInfiniteCycleViewPager">
+        <attr name="icvp_min_page_scale_offset"/>
+        <attr name="icvp_center_page_scale_offset"/>
+        <attr name="icvp_min_page_scale"/>
+        <attr name="icvp_max_page_scale"/>
+        <attr name="icvp_medium_scaled"/>
+        <attr name="icvp_scroll_duration"/>
+        <attr name="icvp_interpolator"/>
+    </declare-styleable>
+
+    <declare-styleable name="VerticalInfiniteCycleViewPager">
+        <attr name="icvp_min_page_scale_offset"/>
+        <attr name="icvp_center_page_scale_offset"/>
+        <attr name="icvp_min_page_scale"/>
+        <attr name="icvp_max_page_scale"/>
+        <attr name="icvp_medium_scaled"/>
+        <attr name="icvp_scroll_duration"/>
+        <attr name="icvp_interpolator"/>
+    </declare-styleable>
+
+    <declare-styleable name="AutoScalingLayout">
+        <attr name="designWidth" format="dimension" />
+        <attr name="designHeight" format="dimension" />
+        <attr name="autoScaleEnable" format="boolean" />
+        <attr name="autoScaleType" format="string" />
+        <attr name="screenInch" format="float"/>
+        <attr name="preScaling" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="WaveProgress">
+        <!-- 是否开启抗锯齿 -->
+        <attr name="antiAlias" />
+        <!-- 深色水波动画时间 -->
+        <attr name="darkWaveAnimTime" format="integer" />
+        <!-- 浅色水波动画时间 -->
+        <attr name="lightWaveAnimTime" format="integer" />
+        <!-- 最大值 -->
+        <attr name="maxValue" />
+        <!-- 当前值 -->
+        <attr name="value" />
+        <attr name="valueColor" />
+        <attr name="valueSize" />
+        <attr name="CircenterColor" />
+        <!-- 正在下载 -->
+        <attr name="des_value" />
+        <attr name="des_valueColor" />
+        <attr name="des_valueSize" />
+        <!-- 绘制内容相应的提示语 -->
+        <attr name="hint" />
+        <attr name="hintSize" />
+        <attr name="hintColor" />
+        <!-- 圆环宽度 -->
+        <attr name="circleWidth" format="dimension" />
+        <!-- 圆环颜色 -->
+        <attr name="circleColor" format="color|reference" />
+        <!-- 背景圆环颜色 -->
+        <attr name="bgCircleColor" format="color|reference" />
+        <!-- 锁定水波不随圆环进度改变，默认锁定在50%处 -->
+        <attr name="lockWave" format="boolean" />
+        <!-- 水波数量 -->
+        <attr name="waveNum" format="integer" />
+        <!-- 水波高度，峰值和谷值之和 -->
+        <attr name="waveHeight" format="dimension" />
+        <!-- 深色水波颜色 -->
+        <attr name="darkWaveColor" format="color|reference" />
+        <!-- 是否显示浅色水波 -->
+        <attr name="showLightWave" format="boolean" />
+        <!-- 浅色水波颜色 -->
+        <attr name="lightWaveColor" format="color|reference" />
+        <!-- 浅色水波的方向 -->
+        <attr name="lightWaveDirect" format="enum">
+            <enum name="L2R" value="0" />
+            <enum name="R2L" value="1" />
+        </attr>
+    </declare-styleable>
+
+
+
+    <!--检查的圆环-->
+    <declare-styleable name="UpdateProgressBar">
+
+
+        <!--公共属性-->
+        <!--进度宽度-->
+        <attr name="progress_width" format="dimension" />
+        <!--起始角度-->
+        <attr name="start_angle" format="integer" />
+
+        <!--percentCover 模式特有属性-->
+        <!--进度起始色-->
+        <attr name="cover_start_color" format="color" />
+        <!--进度中间色-->
+        <attr name="cover_mid_color" format="color" />
+        <!--进度结束色-->
+        <attr name="cover_end_color" format="color" />
+        <!--背景起始色-->
+        <attr name="cover_bg_start_color" format="color" />
+        <!--背景中间色-->
+        <attr name="cover_bg_mid_color" format="color" />
+        <!--背景结束色-->
+        <attr name="cover_bg_end_color" format="color" />
+        <!--是否圆帽显示-->
+        <attr name="cover_stroke_cap" format="boolean"/>
+
+        <!--percentSplice 模式特有属性-->
+        <!--暂无-->
+
+    </declare-styleable>
+
+
+</resources>
