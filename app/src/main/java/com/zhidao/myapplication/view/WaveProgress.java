@@ -148,7 +148,9 @@ public class WaveProgress extends View {
         mCenterPoint = new Point();
 
         initAttrs(context, attrs);
+
         initPaint();
+
         initPath();
     }
 
@@ -346,10 +348,8 @@ public class WaveProgress extends View {
         }
         // 刷新当前截取 Path
         mDstPath.reset();
-
         // 避免硬件加速的Bug
         mDstPath.lineTo(0, 0);
-
         // 截取片段
         float stop = mPathLength * mRightMarkOffset;
         mPathMeasure.getSegment(0, stop, mDstPath, true);

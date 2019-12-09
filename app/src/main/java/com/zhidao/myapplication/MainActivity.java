@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(@NonNull Message msg) {
             if (msg.what == 0) {
-                System.out.println("chencl_  213131");
                 wave_progress_bar.showRightMarkAnimator();
                 wave_progress_bar.setDownloadComplete(true);
             }

@@ -11,15 +11,15 @@
 
         android:layout_gravity="center_horizontal"
         android:padding="20dp"
-        android:clickable="true"
         android:focusable="false"
         android:id="@+id/loading"
         android:layout_width="220dp"
         android:layout_height="220dp"
-        app:cover_bg_start_color="#1ad8d8d8"
+        app:cover_bg_cir_color="#3ad8d8d8"
         app:cover_end_color="#3932D0"
         app:cover_start_color="#3932D0"
         app:cover_mid_color="#3FC4D4"
+        app:start_angle="90"
         app:progress_width="9dp"/>
 
     <Button

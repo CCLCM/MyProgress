@@ -113,7 +113,7 @@
         <!--进度结束色-->
         <attr name="cover_end_color" format="color" />
         <!--背景起始色-->
-        <attr name="cover_bg_start_color" format="color" />
+        <attr name="cover_bg_cir_color" format="color" />
         <!--背景中间色-->
         <attr name="cover_bg_mid_color" format="color" />
         <!--背景结束色-->

@@ -18,7 +18,6 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
@@ -29,12 +28,15 @@ public class UpdateProgressBar extends View {
     private int mProgressStartColor;
     private int mProgressMidColor;
     private int mProgressEndColor;
-    private int mBgStartColor;
-    private int mBgMidColor;
+    private int mBgCirColor;
     private float mProgressWidth;
     private int mStartAngle;
+
     private static final int HALF_CIRCLE = 180;
-    private boolean mStrokeCap;
+
+    private static final int CIRCLE = 360;
+    private int startAngle = 1;
+
     private boolean isFirstEnd = false;
     private boolean isShowAnimator = false;
     private int mDefaultAllAnimDuration;
@@ -70,75 +72,98 @@ public class UpdateProgressBar extends View {
 
     public UpdateProgressBar(Context context,  AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        // TODO 如果需要发光背景
         //setLayerType(LAYER_TYPE_SOFTWARE, null);
+
+        initAttr(context, attrs);
+
+        //初始化画笔
+        initPaint();
+
+        //初始化 旋转小圆点
+        initPointBitmap();
+
+
+    }
+
+    private void initAttr(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.UpdateProgressBar);
 
-        // percentCover 模式特有属性
         mProgressStartColor = ta.getColor(R.styleable.UpdateProgressBar_cover_start_color, Color.YELLOW);
         mProgressMidColor = ta.getColor(R.styleable.UpdateProgressBar_cover_mid_color, mProgressStartColor);
         mProgressEndColor = ta.getColor(R.styleable.UpdateProgressBar_cover_end_color, mProgressStartColor);
-        mBgStartColor = ta.getColor(R.styleable.UpdateProgressBar_cover_bg_start_color, Color.LTGRAY);
-        mBgMidColor = ta.getColor(R.styleable.UpdateProgressBar_cover_bg_mid_color, mBgStartColor);
-
-        mStrokeCap = ta.getBoolean(R.styleable.UpdateProgressBar_cover_stroke_cap, false);
-
-        // percentSplice 模式特有属性 暂无
+        mBgCirColor = ta.getColor(R.styleable.UpdateProgressBar_cover_bg_cir_color, Color.LTGRAY);
 
         // 公共属性
         mProgressWidth = ta.getDimension(R.styleable.UpdateProgressBar_progress_width, 8f);
-        mStartAngle = 90;
+        mStartAngle = ta.getColor(R.styleable.UpdateProgressBar_start_angle, 90);;
         mDefaultAllAnimDuration = 2000;
         ta.recycle();
+    }
 
+    /**
+     * 初始化画笔
+     */
+    private void initPaint() {
 
-        mBgPaint.setStyle(Paint.Style.STROKE);
-        if (mStrokeCap) {
-            mBgPaint.setStrokeCap(Paint.Cap.ROUND);
-        }
+        //浅色灰色背景画笔
+        mBgPaint.setStrokeCap(Paint.Cap.ROUND);
         mBgPaint.setStrokeWidth(mProgressWidth);
 
+
+        //彩色进度条画笔
         mProgressPaint.setStyle(Paint.Style.STROKE);
         mProgressPaint.setStrokeCap(Paint.Cap.ROUND);
         mProgressPaint.setAntiAlias(true);
         mProgressPaint.setStrokeWidth(mProgressWidth);
 
 
+        /* 发光背景画笔,需要关闭硬件加速
+         TODO 发光背景
+         */
         mProgressOutPaint.setStyle(Paint.Style.STROKE);
-        //mProgressOutPaint.setStrokeCap(Paint.Cap.ROUND);
+        mProgressOutPaint.setStrokeCap(Paint.Cap.ROUND);
         mProgressOutPaint.setAntiAlias(true);
         mProgressOutPaint.setStrokeWidth(mProgressWidth);
+        // TODO 如果需要发光背景  需要将 setLayerType(LAYER_TYPE_SOFTWARE, null);打开  不打开无效
         mProgressOutPaint.setMaskFilter(new BlurMaskFilter(10, BlurMaskFilter.Blur.NORMAL));
 
+        //小圆点画笔
         mProgressPointPaint.setStyle(Paint.Style.STROKE);
         mProgressPointPaint.setStrokeCap(Paint.Cap.ROUND);
         mProgressPointPaint.setAntiAlias(true);
         mProgressPointPaint.setStrokeWidth(mProgressWidth);
+        // TODO 发光背景  需要将 setLayerType(LAYER_TYPE_SOFTWARE, null);打开  不打开无效
         mProgressPointPaint.setMaskFilter(new BlurMaskFilter(5, BlurMaskFilter.Blur.NORMAL));
 
+        //浅灰色实心背景
         mBGCirclePaint = new Paint();
         mBGCirclePaint.setAntiAlias(true);
         mBGCirclePaint.setStyle(Paint.Style.FILL);
         mBGCirclePaint.setStrokeCap(Paint.Cap.ROUND);
-
-       /* mProgressPointPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
-        mProgressPointPaint.setStyle(Paint.Style.FILL);
-        mProgressPointPaint.setAntiAlias(true);*/
-
-        initPointBitmap();
-
-
     }
 
+    /**
+     * 初始化 旋转小圆点
+     */
     private void initPointBitmap() {
         mMatrix = new Matrix();
         pos = new float[2];
         tan = new float[2];
-      /*  mLititleBitmap = ((BitmapDrawable) getResources()
-                .getDrawable(R.mipmap.ring_round))
-                .getBitmap();*/
+
+        /* 获取旋转圆点的图片  原图
+        mLititleBitmap = ((BitmapDrawable) getResources()
+            .getDrawable(R.mipmap.ring_round))
+            .getBitmap();
+        */
         mLititleBitmap = compressSampling();
     }
 
+    /**
+     * 获取旋转小圆点的图片宽高进行压缩 和 进度条的宽度压缩到相同
+     * @return
+     */
     private Bitmap compressSampling() {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
@@ -180,16 +205,17 @@ public class UpdateProgressBar extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-/*
+
+        /*
         if (!isFirstEnd) {
             drawProgress(canvas);
         } else {
             drawRoate(canvas);
         }
-*/
+        */
 
-        drawBgProgress(canvas);
-        Log.d("chencl_  " ,"chencl_123 " +isShowAnimator );
+        drawCirProgress(canvas);
+
         if (isShowAnimator) {
             showLoadedCenterUI(canvas);
             showLoadedCriUI(canvas);
@@ -199,11 +225,10 @@ public class UpdateProgressBar extends View {
     }
 
     private void drawRoate(Canvas canvas) {
-        Log.d("chencl_","chencl_  " + mCurProgress);
         canvas.save();
         canvas.rotate(mCurProgress - 90, mMeasureWidth / 2, mMeasureHeight / 2);
 
-        for (int i = 0; i <= 360; i++) {
+        for (int i = 0; i <= CIRCLE; i++) {
 
             float fraction = 0;
             if (i < HALF_CIRCLE) {
@@ -221,7 +246,7 @@ public class UpdateProgressBar extends View {
                     mProgressPaint);
         }
 
-
+        //绘制小圆点
         Path orbit = new Path();
         canvas.setDrawFilter(
                 new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
@@ -247,8 +272,8 @@ public class UpdateProgressBar extends View {
 
     private void showLoadedCenterUI(Canvas canvas) {
         canvas.save();
-        mBGCirclePaint.setColor(mBgStartColor);
-        canvas.drawArc(pCenterRectF, 0, 360, true, mBGCirclePaint);
+        mBGCirclePaint.setColor(mBgCirColor);
+        canvas.drawArc(pCenterRectF, 0, CIRCLE, true, mBGCirclePaint);
         canvas.restore();
 
     }
@@ -257,7 +282,7 @@ public class UpdateProgressBar extends View {
         canvas.save();
         canvas.rotate(mCurProgress - 90, mMeasureWidth / 2, mMeasureHeight / 2);
 
-        for (int i = 0; i <= 360; i++) {
+        for (int i = 0; i <= CIRCLE; i++) {
 
             float fraction = 0;
             if (i < HALF_CIRCLE) {
@@ -278,9 +303,7 @@ public class UpdateProgressBar extends View {
     }
 
     private void showDefaultAnimator() {
-        //if (valueAnimator == null) {
-            valueAnimator = ObjectAnimator.ofFloat(0, 360);
-       // }
+        valueAnimator = ObjectAnimator.ofFloat(0, CIRCLE);
         valueAnimator.setDuration((long) (mDefaultAllAnimDuration));
         valueAnimator.setInterpolator(new LinearInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -300,39 +323,41 @@ public class UpdateProgressBar extends View {
             @Override
             public void onAnimationEnd(Animator animation) {
                 isFirstEnd = true;
-                Log.d("chencl_  66666666", " true  ");
                 showDefaultAnimator();
             }
         });
         valueAnimator.start();
     }
 
-    // 画进度之外的背景
-    private void drawBgProgress(Canvas canvas) {
+    // 画背景圆
+    private void drawCirProgress(Canvas canvas) {
         canvas.save();
-        mBgPaint.setColor(mBgStartColor);
-        canvas.drawArc(pRectF, 0, 360, false, mBgPaint);
+        mBgPaint.setColor(mBgCirColor);
+        canvas.drawArc(pRectF, 0, CIRCLE, false, mBgPaint);
         canvas.restore();
     }
 
-    private int startAngle = 1;
+
 
     private void drawProgress(Canvas canvas) {
 
-//        if (!isFirstEnd) {
         canvas.save();
         canvas.rotate(-90, mMeasureWidth / 2, mMeasureHeight / 2);
-           /* mProgressOutPaint.setColor(Color.WHITE);
+
+        /* 发光背景,需要关闭硬件加速
+        TODO 发光背景
+        mProgressOutPaint.setColor(Color.WHITE);
 
             canvas.drawArc(pRectF,
                     startAngle,
                     startAngle + mCurProgress,
                     false,
                     mProgressOutPaint);
-            */
 
+        */
+
+        //绘制彩色进度条
         for (int i = 0; i <= mCurProgress; i++) {
-
             float fraction = 0;
             if (i < HALF_CIRCLE) {
                 fraction = i / (float) HALF_CIRCLE;
@@ -341,16 +366,15 @@ public class UpdateProgressBar extends View {
                 fraction = (i - HALF_CIRCLE) / (float) HALF_CIRCLE;
                 mProgressPaint.setColor(getGradient(fraction, mProgressMidColor, mProgressEndColor));
             }
-
             canvas.drawArc(pRectF,
                     startAngle + i,
                     1,
                     false,
                     mProgressPaint);
-
         }
 
 
+        //绘制小圆点
         Path orbit = new Path();
         canvas.setDrawFilter(
                 new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
@@ -370,7 +394,6 @@ public class UpdateProgressBar extends View {
         canvas.drawCircle(pos[0], pos[1], 5, mProgressPointPaint);
         canvas.restore();
 
-//        }
     }
 
 
@@ -389,7 +412,7 @@ public class UpdateProgressBar extends View {
         showDefaultAnimator();
     }
 
-
+    //根据角度获取颜色值
     private int getGradient(float fraction, int startColor, int endColor) {
         if (fraction > 1) fraction = 1;
         int alphaStart = Color.alpha(startColor);
@@ -420,7 +443,6 @@ public class UpdateProgressBar extends View {
             valueAnimator.removeAllUpdateListeners();
             valueAnimator = null;
         }
-
     }
 
 }
